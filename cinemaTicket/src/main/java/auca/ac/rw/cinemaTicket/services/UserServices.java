@@ -22,10 +22,10 @@ public class UserServices {
             user.getNames());
 
         if (checkUser.isPresent()) {
-            return "Student already exists";
+            return "User already exists";
         } else {
             userRepository.save(user);
-            return "Student created successfully";
+            return "User created successfully";
         }
     }
 
