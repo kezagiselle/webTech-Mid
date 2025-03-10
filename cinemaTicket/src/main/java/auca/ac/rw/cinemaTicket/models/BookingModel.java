@@ -32,8 +32,9 @@ public class BookingModel {
     @Column(name = "payment")
     private String paymentStatus;
 
+   
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id") 
+    @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference
     private UserModel user;
     
@@ -79,4 +80,11 @@ public class BookingModel {
         this.paymentStatus = paymentStatus;
     }
 
+     public void setUser(UserModel user) {
+        this.user = user;
+    }
+
+    public UserModel getUser() {
+        return user;
+    }
 }
