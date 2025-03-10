@@ -30,24 +30,16 @@ public class CategoryUnit {
     // Endpoint to add a new category
     @PostMapping("/add")
     public ResponseEntity<String> addCategory(
-            @RequestBody CategoryUnit unit,
+            @RequestBody auca.ac.rw.cinemaTicket.models.CategoryUnit unit,
             @RequestParam(required = false) String parentName,
             @RequestParam(required = false) String parentDescription) {
         
         String result = categoryUnitService.saveCategoryUnit(unit, parentName, parentDescription);
         return ResponseEntity.ok(result);
     }
-
-        // Endpoint to get all categories
-        @GetMapping("/getAll")
-        public ResponseEntity<List<CategoryUnit>> getAllCategories() {
-            List<CategoryUnit> categories = categoryUnitService.getAllCategoryUnits();
-            return ResponseEntity.ok(categories);
-        }
     }
 
 
   
  
 
-}

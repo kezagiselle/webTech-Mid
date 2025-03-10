@@ -4,6 +4,8 @@ import auca.ac.rw.cinemaTicket.models.CategoryUnit;
 import auca.ac.rw.cinemaTicket.repositories.CategoryUnitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Optional;
 // import java.util.UUID;
 import java.util.UUID;
@@ -17,7 +19,7 @@ public class CategoryUnitService {
     public String saveCategoryUnit(CategoryUnit unit, String parentName,
             String parentDescription) {
                                 // Fetch the parent category by name and description
-                                Optional<CategoryUnit> parentCategoryOpt = categoryUnitRepository.findByNameAndDescription( parentName, parentDescription);
+         Optional<CategoryUnit> parentCategoryOpt = categoryUnitRepository.findByNameAndDescription( parentName, parentDescription);
 
         // If parent exists, proceed with saving the CategoryUnit
         if (parentCategoryOpt.isPresent()) {
@@ -55,13 +57,19 @@ public class CategoryUnitService {
         return categoryUnitRepository;
     }
 
+    
+    public List<CategoryUnit> getAllCategoryUnits() {
+        return categoryUnitRepository.findAll();
+    }
+    
+
     public void setCategoryUnitRepository(CategoryUnitRepository categoryUnitRepository) {
         this.categoryUnitRepository = categoryUnitRepository;
     }
 
-    public String saveCategoryUnit(auca.ac.rw.cinemaTicket.controllers.CategoryUnit unit, String parentName,
-            String parentDescription) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'saveCategoryUnit'");
-    }
+    // public String saveCategoryUnit(auca.ac.rw.cinemaTicket.controllers.CategoryUnit unit, String parentName,
+    //         String parentDescription) {
+    //     // TODO Auto-generated method stub
+    //     throw new UnsupportedOperationException("Unimplemented method 'saveCategoryUnit'");
+    // }
 }
