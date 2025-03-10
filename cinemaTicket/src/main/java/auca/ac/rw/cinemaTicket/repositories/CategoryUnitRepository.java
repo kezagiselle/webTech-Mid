@@ -12,8 +12,12 @@ import java.util.UUID;
 public interface CategoryUnitRepository extends JpaRepository<CategoryUnit, UUID> {
 
     Optional<CategoryUnit> findById(UUID id);  // Corrected the entity type to CategoryUnit
-    Optional<CategoryUnit> existsByNameAndDescription(String name, String description);
-    boolean existsByName(String name);
+    boolean existsByNameAndDescription(String name, String description);
+    Optional<CategoryUnit> findByNameAndDescription(String name, String description);
+  
+   
+    // boolean existsByName(String name);
+    // void save(auca.ac.rw.cinemaTicket.controllers.CategoryUnit unit);
 
     // No need to define save() as it's already inherited from JpaRepository
 }

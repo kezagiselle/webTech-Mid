@@ -2,6 +2,8 @@ package auca.ac.rw.cinemaTicket.models;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -33,6 +35,7 @@ public class CategoryUnit {
 
     @ManyToOne
     @JoinColumn(name = "parent_id", nullable = true) 
+    @JsonBackReference 
     private CategoryUnit parentCategory;
 
     public CategoryUnit() {}
@@ -76,4 +79,6 @@ public class CategoryUnit {
     public void setParentCategory(CategoryUnit parentCategory) { 
         this.parentCategory = parentCategory; 
     }
+
+    
 }
