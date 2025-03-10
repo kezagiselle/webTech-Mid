@@ -14,11 +14,10 @@ public class CategoryUnitService {
     @Autowired
     private CategoryUnitRepository categoryUnitRepository;
 
-    public String saveCategoryUnit(auca.ac.rw.cinemaTicket.controllers.CategoryUnit unit, String parentName,
+    public String saveCategoryUnit(CategoryUnit unit, String parentName,
             String parentDescription) {
-        // Fetch the parent category by name and description
-        Optional<CategoryUnit> parentCategoryOpt = categoryUnitRepository.findByNameAndDescription(parentName,
-                parentDescription);
+                                // Fetch the parent category by name and description
+                                Optional<CategoryUnit> parentCategoryOpt = categoryUnitRepository.findByNameAndDescription( parentName, parentDescription);
 
         // If parent exists, proceed with saving the CategoryUnit
         if (parentCategoryOpt.isPresent()) {
@@ -52,15 +51,17 @@ public class CategoryUnitService {
         return categoryUnitRepository.findById(id);
     }
 
-    public Optional<CategoryUnit> getCategoryUnitByNameAndDescription(String name, String description) {
-        return categoryUnitRepository.findByNameAndDescription(name, description);
-    }
-
     public CategoryUnitRepository getCategoryUnitRepository() {
         return categoryUnitRepository;
     }
 
     public void setCategoryUnitRepository(CategoryUnitRepository categoryUnitRepository) {
         this.categoryUnitRepository = categoryUnitRepository;
+    }
+
+    public String saveCategoryUnit(auca.ac.rw.cinemaTicket.controllers.CategoryUnit unit, String parentName,
+            String parentDescription) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'saveCategoryUnit'");
     }
 }
