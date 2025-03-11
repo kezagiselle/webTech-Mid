@@ -26,9 +26,9 @@ public class MovieModel {
     @Column(name = "title_movie")
     private String title;
 
-    @ManyToOne // Establish a relationship with CategoryUnit
-    @JoinColumn(name = "category_id") // Foreign key column in the movies table
-    private CategoryUnit category; // Use the entity here
+    @ManyToOne 
+    @JoinColumn(name = "category_id") 
+    private CategoryUnit category; 
 
     @Column(name = "duration")
     private String duration;

@@ -12,19 +12,19 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/movies") // Base URL for all endpoints in this controller
+@RequestMapping("/movies") 
 public class MovieController {
 
     @Autowired
     private MovieServices movieServices;
 
     // Endpoint to add a new movie
-    @PostMapping("/add")
+    @PostMapping("/addMovie")
     public ResponseEntity<MovieModel> addMovie(
-            @RequestBody String title,
-            @RequestBody CategoryUnit category,
-            @RequestBody String duration,
-            @RequestBody String language) {
+            @RequestParam String title,
+            @RequestParam CategoryUnit category,
+            @RequestParam String duration,
+            @RequestParam String language) {
         MovieModel newMovie = movieServices.addMovie(title, category, duration, language);
         return new ResponseEntity<>(newMovie, HttpStatus.CREATED);
     }
