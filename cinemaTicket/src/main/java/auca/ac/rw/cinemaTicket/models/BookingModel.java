@@ -1,5 +1,6 @@
 package auca.ac.rw.cinemaTicket.models;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -11,6 +12,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -32,12 +35,19 @@ public class BookingModel {
     @Column(name = "payment")
     private String paymentStatus;
 
-   
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference
     private UserModel user;
-    
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "ticket",
+        joinColumns = @JoinColumn(name = "booking_id"),
+        inverseJoinColumns = @JoinColumn(name = "movie_id")
+    )
+    private List<MovieModel> movies;
+
     public BookingModel() {
     }
 
@@ -80,11 +90,19 @@ public class BookingModel {
         this.paymentStatus = paymentStatus;
     }
 
-     public void setUser(UserModel user) {
+    public void setUser(UserModel user) {
         this.user = user;
     }
 
     public UserModel getUser() {
         return user;
+    }
+
+    public List<MovieModel> getMovies() {
+        return movies;
+    }
+
+    public void setMovies(List<MovieModel> movies) {
+        this.movies = movies;
     }
 }
