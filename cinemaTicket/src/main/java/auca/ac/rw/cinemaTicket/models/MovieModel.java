@@ -1,40 +1,34 @@
 package auca.ac.rw.cinemaTicket.models;
 
 import java.util.List;
-// import java.util.Locale.Category;
 import java.util.UUID;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "movies") 
+@Table(name = "movies")
 public class MovieModel {
-    
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO) 
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private UUID id;
 
     @Column(name = "title_movie")
     private String title;
 
-    @Enumerated(EnumType.STRING) 
-    @Column(name = "category")
-    private CategoryUnit categoryUnit;
-
-    @Column(name = "category")
-    private CategoryUnit category;
+    @ManyToOne // Establish a relationship with CategoryUnit
+    @JoinColumn(name = "category_id") // Foreign key column in the movies table
+    private CategoryUnit category; // Use the entity here
 
     @Column(name = "duration")
     private String duration;
@@ -57,6 +51,7 @@ public class MovieModel {
     public MovieModel() {
     }
 
+    // Getters and Setters
     public UUID getId() {
         return id;
     }
@@ -77,8 +72,8 @@ public class MovieModel {
         return category;
     }
 
-    public void setCategory(CategoryUnit category2) {
-        this.category = category2;
+    public void setCategory(CategoryUnit category) {
+        this.category = category;
     }
 
     public String getDuration() {
