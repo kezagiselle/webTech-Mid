@@ -33,7 +33,7 @@ public class CategoryUnit {
 
     @ManyToOne
     @JoinColumn(name = "parent_id", nullable = true) 
-    @JsonBackReference 
+    // @JsonBackReference 
     private CategoryUnit parentCategory;
 
     public CategoryUnit() {}

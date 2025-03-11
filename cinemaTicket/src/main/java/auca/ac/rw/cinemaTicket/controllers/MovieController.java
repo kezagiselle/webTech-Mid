@@ -12,13 +12,12 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/movies") 
+@RequestMapping("/movies")
 public class MovieController {
 
     @Autowired
     private MovieServices movieServices;
 
-    // Endpoint to add a new movie
     @PostMapping("/addMovie")
     public ResponseEntity<MovieModel> addMovie(
             @RequestParam String title,
@@ -29,8 +28,7 @@ public class MovieController {
         return new ResponseEntity<>(newMovie, HttpStatus.CREATED);
     }
 
-    // Endpoint to retrieve all movies
-    @GetMapping("/all")
+    @GetMapping("/allMovies")
     public ResponseEntity<List<MovieModel>> getAllMovies() {
         List<MovieModel> movies = movieServices.getAllMovies();
         return new ResponseEntity<>(movies, HttpStatus.OK);

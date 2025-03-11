@@ -1,6 +1,7 @@
 package auca.ac.rw.cinemaTicket.controllers;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,4 +53,26 @@ public class BookingController {
         List<BookingModel> bookings = bookingServices.getAllBookings();
         return ResponseEntity.ok(bookings);
     }
+    @GetMapping(value = "/usersWhoBookedActionMovies")
+    public ResponseEntity<?> getUsersWhoBookedActionMovies() {
+        List<BookingModel> bookings = bookingServices.getUsersWhoBookedActionMovies();
+        if (!bookings.isEmpty()) {
+            return new ResponseEntity<>(bookings, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("No users found who booked action movies", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping(value = "/bookMovie")
+    public ResponseEntity<?> bookMovie(
+            @RequestParam UUID userId,
+            @RequestParam UUID movieId) {
+    
+        String result = bookingServices.bookMovie(userId, movieId);
+        if (result.equals("Booking successful")) {
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        }
+}
 }
