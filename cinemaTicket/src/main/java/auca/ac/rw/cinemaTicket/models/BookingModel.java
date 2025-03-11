@@ -41,7 +41,7 @@ public class BookingModel {
     private UserModel user;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    // @JsonBackReference 
+    @JsonBackReference 
     @JoinTable(
         name = "ticket",
         joinColumns = @JoinColumn(name = "booking_id"),

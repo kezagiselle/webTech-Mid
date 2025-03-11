@@ -36,7 +36,7 @@ public class UserModel {
     private String role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonManagedReference   
+    @JsonManagedReference  
     private List<BookingModel> bookings;
 
     

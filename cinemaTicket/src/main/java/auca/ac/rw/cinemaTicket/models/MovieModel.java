@@ -37,7 +37,7 @@ public class MovieModel {
     private String language;
 
     @ManyToMany(mappedBy = "movies", fetch = FetchType.EAGER)
-    @JsonBackReference 
+    // @JsonBackReference 
     private List<BookingModel> bookings;
 
     public MovieModel(UUID id, String title, CategoryUnit category, String duration, String language) {
