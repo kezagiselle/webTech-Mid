@@ -14,6 +14,7 @@ public interface CategoryUnitRepository extends JpaRepository<CategoryUnit, UUID
     Optional<CategoryUnit> findById(UUID id);  // Corrected the entity type to CategoryUnit
     boolean existsByNameAndDescription(String name, String description);
     Optional<CategoryUnit> findByNameAndDescription(String name, String description);
+   
   
    
     // boolean existsByName(String name);

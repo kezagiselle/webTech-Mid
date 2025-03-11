@@ -43,9 +43,9 @@ public class CategoryUnit {
     }
 
 
-        @PostMapping(value = "/addCategoryWithParent", consumes = "application/json")
+    @PostMapping(value = "/addCategoryWithParent", consumes = "application/json")
     public ResponseEntity<?> saveCategoryWithParent(
-            @RequestBody CategoryUnit unit,
+            @RequestBody auca.ac.rw.cinemaTicket.models.CategoryUnit unit,
             @RequestParam(required = false) String parentName,
             @RequestParam(required = false) String parentDescription
     ) {
@@ -57,7 +57,7 @@ public class CategoryUnit {
         // If parentName and parentDescription are not provided, treat it as a parent category
         if (parentName == null || parentDescription == null) {
             // Save as a parent category
-            String saveResult = categoryUnitService.saveCategory(unit);
+            String saveResult = categoryUnitService.SaveParent(unit);
             if (saveResult.contains("saved successfully")) {
                 return new ResponseEntity<>(saveResult, HttpStatus.CREATED);
             } else {
@@ -72,10 +72,11 @@ public class CategoryUnit {
         if (saveResult.contains("saved successfully")) {
             return new ResponseEntity<>(saveResult, HttpStatus.CREATED); // HTTP 201 for successful creation
         } else {
-            return new ResponseEntity<>(saveResult, HttpStatus.CONFLICT); // HTTP 409 for conflict (already exists or invalid parent)
+            return new ResponseEntity<>(saveResult, HttpStatus.NOT_FOUND); // HTTP 409 for conflict (already exists or invalid parent)
         }
     }
 }
+
 
 
 

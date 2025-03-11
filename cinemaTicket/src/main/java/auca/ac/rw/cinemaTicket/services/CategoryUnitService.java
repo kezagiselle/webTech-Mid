@@ -74,18 +74,7 @@ public class CategoryUnitService { // Opening brace for the class
 
 
 
-    public String saveCategory(auca.ac.rw.cinemaTicket.controllers.CategoryUnit unit) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'saveCategory'");
-    }
-
-
-
-    public String saveCategoryWithParent(auca.ac.rw.cinemaTicket.controllers.CategoryUnit unit, String parentName,
-            String parentDescription) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'saveCategoryWithParent'");
-    }
+  
 
 }
 
