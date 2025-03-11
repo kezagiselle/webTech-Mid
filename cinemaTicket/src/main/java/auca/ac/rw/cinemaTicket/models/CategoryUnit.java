@@ -15,27 +15,29 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-
 @Entity
 @Table(name = "category_unit")
 public class CategoryUnit {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "name", nullable = false, unique = true)
+    @NotNull(message = "Category name is required")
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "description")
     private String description;
 
+    @NotNull(message = "Category type is required")
     @Enumerated(EnumType.STRING)
-    @Column(name = "category_type", nullable = false) 
+    @Column(name = "category_type", nullable = false)
     private ECategoryUnit categoryType;
 
     @ManyToOne
-    @JoinColumn(name = "parent_id", nullable = true) 
-    @JsonBackReference 
+    @JoinColumn(name = "parent_id", nullable = true)  // nullable true for optional parent
+    @JsonBackReference  // Avoid infinite recursion during JSON serialization
     private CategoryUnit parentCategory;
 
     public CategoryUnit() {}
@@ -52,6 +54,10 @@ public class CategoryUnit {
         return id; 
     }
 
+    public void setId(UUID id) { 
+        this.id = id; 
+    }
+
     public String getName() { 
         return name; 
     }
@@ -62,6 +68,7 @@ public class CategoryUnit {
     public String getDescription() { 
         return description; 
     }
+    
     public void setDescription(String description) { 
         this.description = description; 
     }
@@ -79,6 +86,4 @@ public class CategoryUnit {
     public void setParentCategory(CategoryUnit parentCategory) { 
         this.parentCategory = parentCategory; 
     }
-
-    
 }

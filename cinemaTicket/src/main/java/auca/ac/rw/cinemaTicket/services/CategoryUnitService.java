@@ -16,38 +16,29 @@ public class CategoryUnitService {
     @Autowired
     private CategoryUnitRepository categoryUnitRepository;
 
-    public String saveCategoryUnit(CategoryUnit unit, String parentName,
-            String parentDescription) {
-                                // Fetch the parent category by name and description
-         Optional<CategoryUnit> parentCategoryOpt = categoryUnitRepository.findByNameAndDescription( parentName, parentDescription);
-
-        // If parent exists, proceed with saving the CategoryUnit
-        if (parentCategoryOpt.isPresent()) {
-            if (categoryUnitRepository.existsByNameAndDescription(unit.getName(), unit.getDescription())) {
-                return "Category " + unit.getName() + " already exists";
-            } else {
-                // Set the parent category
-                unit.setParentCategory(parentCategoryOpt.get());
-                categoryUnitRepository.save(unit);
-                return "Category saved successfully";
-            }
-        } else {
-            // Create a new parent category if not found
-            CategoryUnit parentCategory = new CategoryUnit();
-            parentCategory.setName(parentName); // Set the name of the parent
-            parentCategory.setDescription(parentDescription); // Set the description of the parent
-
-            // Save the parent category first
-            categoryUnitRepository.save(parentCategory);
-
-            // Now save the CategoryUnit with the newly created parent
-            unit.setParentCategory(parentCategory);
+    public String  SaveParent(CategoryUnit unit){
+        if(categoryUnitRepository.existsByNameAndDescription(unit.getName(), unit.getDescription())){
+            return "Parent" + unit.getName() + " Exists";
+        }
+        
+        else{
             categoryUnitRepository.save(unit);
-
-            return "Parent and Category saved successfully";
+            return "Parent saved successfully ";
         }
     }
-
+    
+    
+    
+    
+    // public String saveCategoryUnit(CategoryUnit unit, String parentName, String parentDescription) {
+    //     if (unit.getName() == null || unit.getName().isEmpty()) {
+    //         throw new IllegalArgumentException("Category name cannot be null or empty");
+    //     }
+    //     // Save the unit to the repository
+    //     categoryUnitRepository.save(unit);
+    //     return "Category saved successfully";
+    // }
+    
     // getting all categories
     public Optional<CategoryUnit> getCategoryUnitById(UUID id) {
         return categoryUnitRepository.findById(id);
@@ -65,6 +56,12 @@ public class CategoryUnitService {
 
     public void setCategoryUnitRepository(CategoryUnitRepository categoryUnitRepository) {
         this.categoryUnitRepository = categoryUnitRepository;
+    }
+
+    public String saveCategoryUnit(auca.ac.rw.cinemaTicket.controllers.CategoryUnit unit, String parentName,
+            String parentDescription) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'saveCategoryUnit'");
     }
 
     // public String saveCategoryUnit(auca.ac.rw.cinemaTicket.controllers.CategoryUnit unit, String parentName,
