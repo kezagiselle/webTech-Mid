@@ -6,32 +6,29 @@ import auca.ac.rw.cinemaTicket.repositories.CategoryUnitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+// import java.util.List;
 import java.util.Optional;
 // import java.util.UUID;
-import java.util.UUID;
+// import java.util.UUID;
 
 @Service
-public class CategoryUnitService { // Opening brace for the class
+public class CategoryUnitService { 
 
     @Autowired
     private CategoryUnitRepository categoryUnitRepository;
 
-    public String SaveParent(CategoryUnit unit) { // Opening brace for the method
-        // Null check for the input unit
-        if (unit == null) { // Opening brace for the if block
+    public String SaveParent(CategoryUnit unit) { 
+        if (unit == null) { 
             return "Parent category data is invalid or null.";
-        } // Closing brace for the if block
-
+        } 
         // Check if the parent category already exists
-        if (categoryUnitRepository.existsByNameAndDescription(unit.getName(), unit.getDescription())) { // Opening brace for the if block
+        if (categoryUnitRepository.existsByNameAndDescription(unit.getName(), unit.getDescription())) { 
             return "Parent category '" + unit.getName() + "' already exists.";
-        } // Closing brace for the if block
-
+        } 
         // Save the parent category to the database
         categoryUnitRepository.save(unit);
         return "Parent category saved successfully.";
-    } // Closing brace for the method
+    } 
 
 
 
@@ -57,14 +54,14 @@ public class CategoryUnitService { // Opening brace for the class
     } else {
         // If parent does not exist, create and save the parent first
         CategoryUnit parent = new CategoryUnit();
-        parent.setName(parentName); // Set the name
-        parent.setDescription(parentDescription); // Set the description
-        parent.setCategoryType(ECategoryUnit.ACTION); // Set the category type as PARENT
+        parent.setName(parentName); 
+        parent.setDescription(parentDescription);
+        parent.setCategoryType(ECategoryUnit.ACTION); 
 
         // Save the parent category
         categoryUnitRepository.save(parent);
 
-        // Now save the subcategory with the newly created parent
+        //saving the subcategory with the newly created parent
         unit.setParentCategory(parent);
         categoryUnitRepository.save(unit);
 

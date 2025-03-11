@@ -22,22 +22,20 @@ public class CategoryUnit {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
-    @NotNull(message = "Category name is required")
+    
     @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "description")
     private String description;
 
-    @NotNull(message = "Category type is required")
     @Enumerated(EnumType.STRING)
     @Column(name = "category_type", nullable = false)
     private ECategoryUnit categoryType;
 
     @ManyToOne
-    @JoinColumn(name = "parent_id", nullable = true)  // nullable true for optional parent
-    @JsonBackReference  // Avoid infinite recursion during JSON serialization
+    @JoinColumn(name = "parent_id", nullable = true) 
+    @JsonBackReference 
     private CategoryUnit parentCategory;
 
     public CategoryUnit() {}

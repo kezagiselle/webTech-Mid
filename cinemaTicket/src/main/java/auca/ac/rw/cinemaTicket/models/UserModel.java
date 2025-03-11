@@ -18,7 +18,7 @@ import jakarta.persistence.Table;
 public class UserModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO) // Fixed UUID generation
+    @GeneratedValue(strategy = GenerationType.AUTO) 
     private UUID id;
 
     @Column(name = "names")
@@ -37,11 +37,10 @@ public class UserModel {
     @JsonManagedReference
     private List<BookingModel> bookings;
 
-    // Default constructor
+    
     public UserModel() {
     }
 
-    // Parameterized constructor
     public UserModel(UUID id, String names, String email, String phoneNumber, String role, List<BookingModel> bookings) {
         this.id = id;
         this.names = names;
