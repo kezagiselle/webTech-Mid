@@ -10,13 +10,13 @@ import org.springframework.stereotype.Repository;
 
 import auca.ac.rw.cinemaTicket.models.BookingModel;
 // import auca.ac.rw.cinemaTicket.models.UserModel;
-import auca.ac.rw.cinemaTicket.services.BookingServices;
+// import auca.ac.rw.cinemaTicket.services.BookingServices;
 
 @Repository
-public interface BookingRepository  extends JpaRepository<BookingModel, UUID>{
+public interface BookingRepository extends JpaRepository<BookingModel, UUID> {
+
     List<BookingModel> findByShowTime(String showTime);
 
     @Query("SELECT DISTINCT b FROM BookingModel b JOIN b.movies m JOIN m.category c WHERE c.name = :categoryName")
     List<BookingModel> findByMoviesCategoryName(@Param("categoryName") String categoryName);
-    void save(BookingServices bookingServices);
 }
