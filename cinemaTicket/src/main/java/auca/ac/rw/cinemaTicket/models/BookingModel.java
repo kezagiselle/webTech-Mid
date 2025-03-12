@@ -40,13 +40,14 @@ public class BookingModel {
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "seat_id", nullable = false)
-    @JsonManagedReference("seat-booking")
+    @JsonManagedReference
     @JsonIgnore
     private SeatModel seats;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference
+    @JsonIgnore
     private UserModel user;
 
     @ManyToMany(fetch = FetchType.EAGER)

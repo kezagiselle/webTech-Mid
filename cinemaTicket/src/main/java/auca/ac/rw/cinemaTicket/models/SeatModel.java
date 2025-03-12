@@ -36,7 +36,7 @@ public class SeatModel {
     
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "booking_id", nullable = false)
-    @JsonBackReference("seat-booking")
+    @JsonBackReference
     @JsonIgnore
     private BookingModel booking;
 
