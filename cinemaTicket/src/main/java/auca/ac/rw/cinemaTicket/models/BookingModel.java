@@ -15,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -34,6 +35,11 @@ public class BookingModel {
     
     @Column(name = "payment")
     private String paymentStatus;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "seat_id", nullable = false)
+    @JsonBackReference
+    private SeatModel seats;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
