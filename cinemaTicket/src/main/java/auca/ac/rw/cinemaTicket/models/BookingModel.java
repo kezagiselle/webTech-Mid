@@ -112,4 +112,12 @@ public class BookingModel {
     public void setMovies(List<MovieModel> movies) {
         this.movies = movies;
     }
+
+    public SeatModel getSeats() {
+        return seats;
+    }
+
+    public void setSeats(SeatModel seats) {
+        this.seats = seats;
+    }
 }

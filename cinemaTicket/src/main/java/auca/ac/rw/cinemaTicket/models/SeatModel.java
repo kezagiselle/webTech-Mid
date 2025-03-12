@@ -80,6 +80,11 @@ public class SeatModel {
         this.availableSeats = availableSeats;
     }
 
-    
+    public BookingModel getBooking() {
+        return booking;
+    }
 
+    public void setBooking(BookingModel booking) {
+        this.booking = booking;
+    }
 }
