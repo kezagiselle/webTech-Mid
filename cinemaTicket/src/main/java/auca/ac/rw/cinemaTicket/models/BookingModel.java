@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -38,7 +40,8 @@ public class BookingModel {
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "seat_id", nullable = false)
-    @JsonBackReference
+    @JsonManagedReference("seat-booking")
+    @JsonIgnore
     private SeatModel seats;
 
     @ManyToOne(fetch = FetchType.EAGER)

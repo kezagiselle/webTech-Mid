@@ -2,6 +2,9 @@ package auca.ac.rw.cinemaTicket.controllers;
 import auca.ac.rw.cinemaTicket.models.SeatModel;
 import auca.ac.rw.cinemaTicket.services.SeatService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,9 +17,10 @@ public class SeatController {
     @Autowired
     private SeatService seatService;
 
-    @PostMapping("/addSeats")
-    public SeatModel addSeat(@RequestBody SeatModel seat) {
-        return seatService.addSeat(seat);
+       @PostMapping(value = "/addSeats", consumes = "application/json")
+    public ResponseEntity<SeatModel> addSeat(@RequestBody SeatModel seat) {
+        SeatModel savedSeat = seatService.addSeat(seat);
+        return new ResponseEntity<>(savedSeat, HttpStatus.CREATED);
     }
 
     @GetMapping("/getAllSeats")

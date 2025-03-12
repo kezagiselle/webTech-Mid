@@ -3,6 +3,7 @@ package auca.ac.rw.cinemaTicket.models;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,7 +22,7 @@ public class SeatModel {
    
      @Id
     @GeneratedValue(strategy = GenerationType.AUTO) 
-    @Column(name = "id")
+    @Column(name = "seat_id")
     private UUID id;
 
     @Column(name = "seatNumber")
@@ -35,7 +36,8 @@ public class SeatModel {
     
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "booking_id", nullable = false)
-    @JsonBackReference
+    @JsonBackReference("seat-booking")
+    @JsonIgnore
     private BookingModel booking;
 
     public SeatModel(UUID id, Integer seatNumber, Integer rowNumber, Boolean availableSeats) {
