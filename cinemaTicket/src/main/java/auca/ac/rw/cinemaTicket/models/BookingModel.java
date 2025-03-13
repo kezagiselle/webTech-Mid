@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -17,15 +17,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-
 @Entity
-@Table(name = "booking") 
+@Table(name = "booking")
 public class BookingModel {
-    
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO) 
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private UUID id;
 
@@ -34,24 +34,20 @@ public class BookingModel {
 
     @Column(name = "seat")
     private String seat;
-    
+
     @Column(name = "payment")
     private String paymentStatus;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "seat_id", nullable = false)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "seat_id", nullable = false) // Foreign key in the booking table
     @JsonManagedReference
-    @JsonIgnore
-    private SeatModel seats;
+    private SeatModel seatModel; // One-to-one relationship
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference
-    @JsonIgnore
     private UserModel user;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JsonBackReference 
     @JoinTable(
         name = "ticket",
         joinColumns = @JoinColumn(name = "booking_id"),
@@ -59,6 +55,7 @@ public class BookingModel {
     )
     private List<MovieModel> movies;
 
+    // Constructors, Getters, and Setters
     public BookingModel() {
     }
 
@@ -69,6 +66,7 @@ public class BookingModel {
         this.paymentStatus = paymentStatus;
     }
 
+    // Getters and Setters
     public UUID getId() {
         return id;
     }
@@ -101,12 +99,20 @@ public class BookingModel {
         this.paymentStatus = paymentStatus;
     }
 
-    public void setUser(UserModel user) {
-        this.user = user;
+    public SeatModel getSeatModel() {
+        return seatModel;
+    }
+
+    public void setSeatModel(SeatModel seatModel) {
+        this.seatModel = seatModel;
     }
 
     public UserModel getUser() {
         return user;
+    }
+
+    public void setUser(UserModel user) {
+        this.user = user;
     }
 
     public List<MovieModel> getMovies() {
@@ -115,13 +121,5 @@ public class BookingModel {
 
     public void setMovies(List<MovieModel> movies) {
         this.movies = movies;
-    }
-
-    public SeatModel getSeats() {
-        return seats;
-    }
-
-    public void setSeats(SeatModel seats) {
-        this.seats = seats;
     }
 }

@@ -25,17 +25,12 @@ public class BookingController {
 
     
     @PostMapping(value = "/saveBooking", consumes = "application/json")
-    public ResponseEntity<?> saveUserBooking(@RequestBody BookingModel bookingModel,
-                                                     @RequestParam String names) {
-
-        String saveBooking = bookingServices.saveUserBooking(bookingModel, names);
-        if (saveBooking.equalsIgnoreCase("Booking saved successfully")) {
-            return new ResponseEntity<>(saveBooking, HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<>(saveBooking, HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<BookingModel> createBooking(@RequestBody BookingModel booking) {
+        // Call the service method to create and save the booking
+        BookingModel savedBooking = bookingServices.createBooking(booking);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedBooking);
     }
+    
 
     @GetMapping(value = "/getBookings")
     public ResponseEntity<?> getUsersByShowTime(String showTime) {

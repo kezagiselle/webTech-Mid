@@ -4,15 +4,18 @@ package auca.ac.rw.cinemaTicket.services;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import auca.ac.rw.cinemaTicket.models.BookingModel;
 import auca.ac.rw.cinemaTicket.models.MovieModel;
+import auca.ac.rw.cinemaTicket.models.SeatModel;
 import auca.ac.rw.cinemaTicket.models.UserModel;
 import auca.ac.rw.cinemaTicket.repositories.BookingRepository;
 import auca.ac.rw.cinemaTicket.repositories.MovieRepository;
+import auca.ac.rw.cinemaTicket.repositories.SeatRepository;
 import auca.ac.rw.cinemaTicket.repositories.UserRepository;
 
 @Service
@@ -27,22 +30,36 @@ public class BookingServices {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private SeatRepository seatRepository;
+
     //for saving the user booking
-    public String saveUserBooking(BookingModel bookingModel, String names) {
-        if (names == null || names.trim().isEmpty()) {
-            return "Invalid user name provided";
+       public BookingModel createBooking(BookingModel booking) {
+        // Ensure the associated SeatModel is saved first
+        if (booking.getSeatModel() != null) {
+            seatRepository.save(booking.getSeatModel());
         }
-    
-        Optional<UserModel> getUser = userRepository.findByNames(names.trim());
-    
-        if (getUser.isPresent()) {
-            bookingModel.setUser(getUser.get()); 
-            bookingRepository.save(bookingModel);
-            return "Booking saved successfully";
-        } else {
-            return "User with the given names is not available";
+
+        // Ensure the associated UserModel exists
+        if (booking.getUser() != null && booking.getUser().getId() != null) {
+            UserModel user = userRepository.findById(booking.getUser().getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+            booking.setUser(user);
         }
+
+        // Ensure the associated MovieModels exist
+        if (booking.getMovies() != null && !booking.getMovies().isEmpty()) {
+            List<MovieModel> movies = booking.getMovies().stream()
+                .map(movie -> movieRepository.findById(movie.getId())
+                    .orElseThrow(() -> new RuntimeException("Movie not found")))
+                .collect(Collectors.toList());
+            booking.setMovies(movies);
+        }
+
+        // Save the booking
+        return bookingRepository.save(booking);
     }
+    
 
     //for getting all the bookings by show time
     public List<BookingModel> getUsersByShowTime(String showTime) {
