@@ -4,7 +4,7 @@ package auca.ac.rw.cinemaTicket.services;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
+// import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,35 +30,42 @@ public class BookingServices {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private SeatRepository seatRepository;
+    public class BookingService {
 
-    //for saving the user booking
-       public BookingModel createBooking(BookingModel booking) {
-        // Ensure the associated SeatModel is saved first
-        if (booking.getSeatModel() != null) {
-            seatRepository.save(booking.getSeatModel());
+        @Autowired
+        private SeatRepository seatRepository;
+    
+        @Autowired
+        private BookingRepository bookingRepository;
+    
+        public String createBooking(BookingModel booking, SeatModel seat) {
+            try {
+                // Validate input
+                if (booking == null || seat == null) {
+                    throw new IllegalArgumentException("Booking and Seat cannot be null");
+                }
+        
+                // Step 1: Save the SeatModel without a booking_id
+                seat.setBooking(null); // Ensure booking is null
+                seat = seatRepository.save(seat); // Save and update the seat object
+        
+                // Step 2: Save the BookingModel with the seat_id
+                booking.setSeatModel(seat);
+                booking = bookingRepository.save(booking); // Save and update the booking object
+        
+                // Step 3: Update the SeatModel with the booking_id
+                seat.setBooking(booking);
+                seatRepository.save(seat); // Save the updated seat object
+        
+                return "Booking created successfully with ID: " + booking.getId();
+            } catch (Exception ex) {
+                // Log the error and return a meaningful message
+                ex.printStackTrace();
+                return "Failed to create booking: " + ex.getMessage();
+            }
         }
-
-        // Ensure the associated UserModel exists
-        if (booking.getUser() != null && booking.getUser().getId() != null) {
-            UserModel user = userRepository.findById(booking.getUser().getId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-            booking.setUser(user);
-        }
-
-        // Ensure the associated MovieModels exist
-        if (booking.getMovies() != null && !booking.getMovies().isEmpty()) {
-            List<MovieModel> movies = booking.getMovies().stream()
-                .map(movie -> movieRepository.findById(movie.getId())
-                    .orElseThrow(() -> new RuntimeException("Movie not found")))
-                .collect(Collectors.toList());
-            booking.setMovies(movies);
-        }
-
-        // Save the booking
-        return bookingRepository.save(booking);
     }
+
     
 
     //for getting all the bookings by show time
@@ -104,6 +111,12 @@ public class BookingServices {
     
         return "Booking successful";
     }
+
+    public BookingModel createBooking(BookingModel booking) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'createBooking'");
+    }
+
 }
             
 

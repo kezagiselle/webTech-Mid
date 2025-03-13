@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -39,9 +40,10 @@ public class BookingModel {
     private String paymentStatus;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "seat_id", nullable = false) // Foreign key in the booking table
-    @JsonManagedReference
-    private SeatModel seatModel; // One-to-one relationship
+    @JoinColumn(name = "seat_id", nullable = true)
+    @JsonBackReference
+    @JsonIgnore
+    private SeatModel seatModel;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
@@ -121,5 +123,10 @@ public class BookingModel {
 
     public void setMovies(List<MovieModel> movies) {
         this.movies = movies;
+    }
+
+    public UUID getMovieId() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getMovieId'");
     }
 }
