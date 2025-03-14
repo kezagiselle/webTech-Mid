@@ -33,9 +33,6 @@ public class BookingModel {
     @Column(name = "showTime")
     private String showTime;
 
-    @Column(name = "seat")
-    private String seat;
-
     @Column(name = "payment")
     private String paymentStatus;
 
@@ -64,7 +61,6 @@ public class BookingModel {
     public BookingModel(UUID id, String showTime, String seat, String paymentStatus) {
         this.id = id;
         this.showTime = showTime;
-        this.seat = seat;
         this.paymentStatus = paymentStatus;
     }
 
@@ -85,13 +81,6 @@ public class BookingModel {
         this.showTime = showTime;
     }
 
-    public String getSeat() {
-        return seat;
-    }
-
-    public void setSeat(String seat) {
-        this.seat = seat;
-    }
 
     public String getPaymentStatus() {
         return paymentStatus;
@@ -123,10 +112,5 @@ public class BookingModel {
 
     public void setMovies(List<MovieModel> movies) {
         this.movies = movies;
-    }
-
-    public UUID getMovieId() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMovieId'");
     }
 }

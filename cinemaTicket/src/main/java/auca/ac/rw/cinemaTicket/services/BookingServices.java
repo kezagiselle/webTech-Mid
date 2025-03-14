@@ -112,10 +112,11 @@ public class BookingServices {
         return "Booking successful";
     }
 
-    public BookingModel createBooking(BookingModel booking) {
+    public BookingModel save(BookingModel booking) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createBooking'");
+        throw new UnsupportedOperationException("Unimplemented method 'save'");
     }
+
 
 }
             

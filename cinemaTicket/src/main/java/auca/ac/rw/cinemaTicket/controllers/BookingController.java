@@ -17,6 +17,7 @@ import auca.ac.rw.cinemaTicket.models.BookingModel;
 import auca.ac.rw.cinemaTicket.models.MovieModel;
 import auca.ac.rw.cinemaTicket.models.SeatModel;
 import auca.ac.rw.cinemaTicket.models.UserModel;
+import auca.ac.rw.cinemaTicket.repositories.BookingRepository;
 import auca.ac.rw.cinemaTicket.repositories.MovieRepository;
 import auca.ac.rw.cinemaTicket.repositories.SeatRepository;
 import auca.ac.rw.cinemaTicket.repositories.UserRepository;
@@ -38,20 +39,18 @@ public class BookingController {
     @Autowired
     private SeatRepository seatRepository;
 
+    @Autowired
+    private BookingRepository bookingRepository;
+
     
     @PostMapping(value = "/saveBooking", consumes = "application/json")
     public ResponseEntity<BookingModel> createBooking(
         @RequestParam("userId") UUID userId,  
-        @RequestParam("movieId") UUID movieId,  
         @RequestBody BookingModel bookingModel) {  
         try {
             // Fetch the UserModel
             UserModel user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
-    
-            // Fetch the MovieModel
-            MovieModel movie = movieRepository.findById(movieId)
-                .orElseThrow(() -> new RuntimeException("Movie not found with ID: " + movieId));
     
             // Ensure the seat exists
             SeatModel seat = bookingModel.getSeatModel();
@@ -71,11 +70,10 @@ public class BookingController {
             booking.setShowTime(bookingModel.getShowTime());
             booking.setPaymentStatus(bookingModel.getPaymentStatus());
             booking.setUser(user);
-            booking.setMovies(List.of(movie));
             booking.setSeatModel(seat); // Link the seat to the booking
-    
+          
             // Save the booking
-            BookingModel savedBooking = bookingServices.createBooking(booking);
+          BookingModel savedBooking = bookingRepository.save(booking);
     
             // Link the seat to the booking (bidirectional relationship)
             seat.setBooking(savedBooking);  // Set the booking reference in the seat

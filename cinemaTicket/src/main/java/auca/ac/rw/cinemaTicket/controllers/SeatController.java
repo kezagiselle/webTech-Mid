@@ -40,57 +40,32 @@ public class SeatController {
     @Autowired
     private SeatRepository seatRepository;
 
-   @PostMapping(value = "/saveBooking", consumes = "application/json")
-public ResponseEntity<BookingModel> createBooking(
-    @RequestParam("userId") UUID userId,  
-    @RequestParam("movieId") UUID movieId,  
-    @RequestBody BookingModel bookingModel) {  
-    try {
-        // Fetch the UserModel
-        UserModel user = userRepository.findById(userId)
-            .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
-
-        // Fetch the MovieModel
-        MovieModel movie = movieRepository.findById(movieId)
-            .orElseThrow(() -> new RuntimeException("Movie not found with ID: " + movieId));
-
-        // Create and save the booking (before seat, so booking gets an ID)
-        BookingModel booking = new BookingModel();
-        booking.setShowTime(bookingModel.getShowTime());
-        booking.setSeat(bookingModel.getSeat());
-        booking.setPaymentStatus(bookingModel.getPaymentStatus());
-        booking.setUser(user);
-        booking.setMovies(List.of(movie));
-
-        // Save the booking first
-        BookingModel savedBooking = bookingServices.createBooking(booking);
-
-        // Ensure the seat exists and link it to the booking
-        SeatModel seat = bookingModel.getSeatModel();
-        if (seat == null) {
-            // Create a new SeatModel if none is provided
-            seat = new SeatModel();
-            seat.setSeatNumber(0);  // Default value (adjust as needed)
-            seat.setRowNumber(0);
-            seat.setAvailableSeats(false); // Default availability
-        } else {
-            // Set the booking reference in the seat before saving
-            seat.setBooking(savedBooking);
+    @PostMapping(value = "/saveSeats", consumes = "application/json")
+    public ResponseEntity<String> saveSeatsForBooking(
+        @RequestParam("bookingId") UUID bookingId,  
+        @RequestBody List<SeatModel> seats) {  
+        try {
+            // Fetch the booking by ID
+            BookingModel booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found with ID: " + bookingId));
+    
+            // Validate seats
+            if (seats == null || seats.isEmpty()) {
+                throw new IllegalArgumentException("Seats cannot be null or empty");
+            }
+    
+            // Save each seat and link it to the booking
+            for (SeatModel seat : seats) {
+                seat.setBooking(booking); // Link the seat to the booking
+                seatRepository.save(seat); // Save the seat
+            }
+    
+            return ResponseEntity.status(HttpStatus.CREATED).body("Seats saved successfully for booking ID: " + bookingId);
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+            return new ResponseEntity<>("Failed to save seats: " + ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
-        // Save the seat with the booking_id now set
-        seat = seatRepository.save(seat);
-
-        // Update the booking with the seat info (if needed)
-        savedBooking.setSeatModel(seat);
-
-        // Return the saved booking
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedBooking);
-    } catch (RuntimeException ex) {
-        ex.printStackTrace();
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
-}
 
 
     @GetMapping("/getAllSeats")

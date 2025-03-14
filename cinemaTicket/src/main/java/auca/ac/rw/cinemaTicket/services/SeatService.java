@@ -20,23 +20,23 @@ public class SeatService {
     private BookingRepository bookingRepository;
 
     
-  public SeatModel addSeat(SeatModel seat) {
-    // Set the seat as available by default if not provided
-    if (seat.getAvailableSeats() == null) {
-        seat.setAvailableSeats(true);
+    public SeatModel addSeat(SeatModel seat) {
+        // Set the seat as available by default if not provided
+        if (seat.getAvailableSeats() == null) {
+            seat.setAvailableSeats(true);
+        }
+    
+        // Ensure the booking exists before saving the seat
+        if (seat.getBooking() != null && seat.getBooking().getId() != null) {
+            BookingModel booking = bookingRepository.findById(seat.getBooking().getId())
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+            seat.setBooking(booking);
+        } else {
+            throw new RuntimeException("Booking is required for seat allocation.");
+        }
+    
+        return seatRepository.save(seat);
     }
-
-    // Ensure the booking exists before saving the seat
-    if (seat.getBooking() != null && seat.getBooking().getId() != null) {
-        BookingModel booking = bookingRepository.findById(seat.getBooking().getId())
-            .orElseThrow(() -> new RuntimeException("Booking not found"));
-        seat.setBooking(booking);
-    } else {
-        throw new RuntimeException("Booking is required for seat allocation.");
-    }
-
-    return seatRepository.save(seat);
-}
 
     public List<SeatModel> getAllSeats() {
         return seatRepository.findAll();
