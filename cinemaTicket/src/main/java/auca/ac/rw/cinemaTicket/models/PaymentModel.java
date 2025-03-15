@@ -17,7 +17,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Payments")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) //prevent issues during JSON serialization and deserialization when using Hibernate with lazy loading.
 public class PaymentModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

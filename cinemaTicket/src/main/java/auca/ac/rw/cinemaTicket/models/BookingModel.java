@@ -62,7 +62,7 @@ public class BookingModel {
     @JsonManagedReference // Prevents infinite recursion in JSON serialization
     private PaymentModel payment;
 
-    
+    // Constructors, Getters, and Setters
     public BookingModel() {
     }
 
