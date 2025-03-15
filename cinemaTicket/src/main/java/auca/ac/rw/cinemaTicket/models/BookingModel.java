@@ -58,7 +58,7 @@ public class BookingModel {
 
     
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "payment_id", nullable = false)
+    @JoinColumn(name = "payment_id")
     @JsonManagedReference // Prevents infinite recursion in JSON serialization
     private PaymentModel payment;
 

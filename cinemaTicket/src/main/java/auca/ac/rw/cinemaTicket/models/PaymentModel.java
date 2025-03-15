@@ -3,6 +3,7 @@ package auca.ac.rw.cinemaTicket.models;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -16,6 +17,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Payments")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
 public class PaymentModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
