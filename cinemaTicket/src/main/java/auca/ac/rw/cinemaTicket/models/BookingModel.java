@@ -37,7 +37,7 @@ public class BookingModel {
     private String paymentStatus;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "seat_id", nullable = true)
+    @JoinColumn(name = "seat_id", nullable = false)
     @JsonBackReference
     @JsonIgnore
     private SeatModel seatModel;

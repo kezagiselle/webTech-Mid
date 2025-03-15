@@ -3,6 +3,8 @@ package auca.ac.rw.cinemaTicket.models;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+// import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
@@ -36,7 +38,8 @@ public class SeatModel {
     private Boolean availableSeats;
 
     @OneToOne(mappedBy = "seatModel", fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @JsonBackReference
+    @JsonIgnore
     private BookingModel booking;
 
     public SeatModel(UUID id, Integer seatNumber, Integer rowNumber, Boolean availableSeats) {
