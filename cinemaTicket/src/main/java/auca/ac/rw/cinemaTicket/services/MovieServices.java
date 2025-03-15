@@ -51,7 +51,7 @@ public class MovieServices {
             throw new RuntimeException("Booking not found with ID: " + bookingId);
         }
     }
-}
+
     
     public List<MovieModel> getAllMovies() {
         return movieRepository.findAll();

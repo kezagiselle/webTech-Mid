@@ -3,6 +3,10 @@ package auca.ac.rw.cinemaTicket.models;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 // import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -38,7 +42,8 @@ public class MovieModel {
     private String language;
 
     @ManyToMany(mappedBy = "movies", fetch = FetchType.EAGER)
-    // @JsonBackReference 
+    @JsonBackReference 
+    @JsonIgnore
     private List<BookingModel> bookings;
 
     public MovieModel(UUID id, String title, CategoryUnit category, String duration, String language) {

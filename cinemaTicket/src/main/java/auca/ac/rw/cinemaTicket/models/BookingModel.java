@@ -56,6 +56,12 @@ public class BookingModel {
     )
     private List<MovieModel> movies;
 
+    
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "payment_id", nullable = false)
+    @JsonManagedReference // Prevents infinite recursion in JSON serialization
+    private PaymentModel payment;
+
     // Constructors, Getters, and Setters
     public BookingModel() {
     }
@@ -128,4 +134,14 @@ public class BookingModel {
         }
         movie.getBookings().add(this);
     }
+
+    public PaymentModel getPayment() {
+        return payment;
+    }
+
+    public void setPayment(PaymentModel payment) {
+        this.payment = payment;
+        payment.setBooking(this); // Maintain bidirectional relationship
+    }
+
 }
