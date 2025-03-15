@@ -1,5 +1,6 @@
 package auca.ac.rw.cinemaTicket.models;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,6 +22,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+
 @Entity
 @Table(name = "booking")
 public class BookingModel {
@@ -81,7 +83,6 @@ public class BookingModel {
         this.showTime = showTime;
     }
 
-
     public String getPaymentStatus() {
         return paymentStatus;
     }
@@ -112,5 +113,19 @@ public class BookingModel {
 
     public void setMovies(List<MovieModel> movies) {
         this.movies = movies;
+    }
+
+    // Add a method to associate a movie with this booking
+    public void addMovie(MovieModel movie) {
+        if (movies == null) {
+            movies = new ArrayList<>();
+        }
+        movies.add(movie);
+
+        // Ensure bidirectional relationship is maintained
+        if (movie.getBookings() == null) {
+            movie.setBookings(new ArrayList<>());
+        }
+        movie.getBookings().add(this);
     }
 }

@@ -1,5 +1,6 @@
 package auca.ac.rw.cinemaTicket.models;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 // import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -98,5 +99,19 @@ public class MovieModel {
 
     public void setBookings(List<BookingModel> bookings) {
         this.bookings = bookings;
+    }
+
+    // Add a method to associate a single booking with this movie
+    public void setBooking(BookingModel booking) {
+        if (bookings == null) {
+            bookings = new ArrayList<>();
+        }
+        bookings.add(booking);
+
+        // Ensure bidirectional relationship is maintained
+        if (booking.getMovies() == null) {
+            booking.setMovies(new ArrayList<>());
+        }
+        booking.getMovies().add(this);
     }
 }
