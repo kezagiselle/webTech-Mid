@@ -44,7 +44,6 @@ public class BookingServices {
                 if (booking == null || seat == null) {
                     throw new IllegalArgumentException("Booking and Seat cannot be null");
                 }
-        
                 // Step 1: Save the SeatModel without a booking_id
                 seat.setBooking(null); // Ensure booking is null
                 seat = seatRepository.save(seat); // Save and update the seat object
@@ -67,7 +66,6 @@ public class BookingServices {
     }
 
     public BookingModel getBookingById(UUID id) {
-        // Assuming you have a repository or data access layer to fetch the booking
         return bookingRepository.findById(id).orElse(null);
     }
     
@@ -82,44 +80,6 @@ public class BookingServices {
         return bookingRepository.findAll(); 
     }
 
-    // public List<BookingModel> getUsersWhoBookedActionMovies() {
-    //     return bookingRepository.findByMoviesCategoryName("ACTION");
-    // }
-
-    public String bookMovie(UUID userId, UUID movieId) {
-        // Fetch the user by ID
-        Optional<UserModel> userOptional = userRepository.findById(userId);
-    
-        if (userOptional.isEmpty()) {
-            return "User not found";
-        }
-    
-        UserModel user = userOptional.get();
-    
-        // Fetch the movie by ID
-        Optional<MovieModel> movieOptional = movieRepository.findById(movieId);
-    
-        if (movieOptional.isEmpty()) {
-            return "Movie not found";
-        }
-    
-        MovieModel movie = movieOptional.get();
-    
-        // Create a new booking
-        BookingModel booking = new BookingModel();
-        booking.setUser(user); // Set the UserModel object
-        booking.setMovies(List.of(movie)); // Set the single movie
-    
-        // Save the booking
-        bookingRepository.save(booking);
-    
-        return "Booking successful";
-    }
-
-    public BookingModel save(BookingModel booking) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'save'");
-    }
 
 
 }

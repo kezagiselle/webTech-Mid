@@ -42,7 +42,7 @@ public class MovieServices {
             movie.setLanguage(language);
 
             // Associate the movie with the booking
-            movie.setBooking(booking); // Assuming MovieModel has a setBooking method
+            movie.setBooking(booking); 
 
             // Save the movie to the database
             return movieRepository.save(movie);

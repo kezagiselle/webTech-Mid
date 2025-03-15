@@ -33,7 +33,6 @@ public class CategoryUnitService {
 
 
     public String saveCategoryWithParent(CategoryUnit unit, String parentName, String parentDescription) {
-    // Null check for the input unit
     if (unit == null) {
         return "Category data is invalid or null.";
     }
@@ -83,45 +82,4 @@ public class CategoryUnitService {
     
 
     
-    // public String saveCategoryUnit(CategoryUnit unit, String parentName, String parentDescription) {
-    //     if (unit.getName() == null || unit.getName().isEmpty()) {
-    //         throw new IllegalArgumentException("Category name cannot be null or empty");
-    //     }
-    //     // Save the unit to the repository
-    //     categoryUnitRepository.save(unit);
-    //     return "Category saved successfully";
-    // }
     
-    // getting all categories
-    // public Optional<CategoryUnit> getCategoryUnitById(UUID id) {
-    //     return categoryUnitRepository.findById(id);
-    // }
-
-    // public CategoryUnitRepository getCategoryUnitRepository() {
-    //     return categoryUnitRepository;
-    // }
-
-    
-    // public List<CategoryUnit> getAllCategoryUnits() {
-    //     return categoryUnitRepository.findAll();
-    // }
-    
-    
-
-    // public void setCategoryUnitRepository(CategoryUnitRepository categoryUnitRepository) {
-    //     this.categoryUnitRepository = categoryUnitRepository;
-    // }
-
-
-    // public String saveCategoryUnit(auca.ac.rw.cinemaTicket.controllers.CategoryUnit unit, String parentName,
-    //         String parentDescription) {
-    //     // TODO Auto-generated method stub
-    //     throw new UnsupportedOperationException("Unimplemented method 'saveCategoryUnit'");
-    // }
-
-    // public String saveCategoryUnit(auca.ac.rw.cinemaTicket.controllers.CategoryUnit unit, String parentName,
-    //         String parentDescription) {
-    //     // TODO Auto-generated method stub
-    //     throw new UnsupportedOperationException("Unimplemented method 'saveCategoryUnit'");
-    // }
-

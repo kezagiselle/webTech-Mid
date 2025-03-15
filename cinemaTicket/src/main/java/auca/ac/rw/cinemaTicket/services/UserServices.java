@@ -38,7 +38,7 @@ public class UserServices {
         return userRepository.findById(id);
     }
     
-     //update student
+     //update user
      public String updateUser(UUID id, UserModel updateUser) {
              return userRepository.findById(id)
                  .map(user -> {
@@ -51,7 +51,7 @@ public class UserServices {
             })
             .orElse("User not found");
     }
-    //delete student
+    //delete user
     public String deleteUser(UUID id) {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
