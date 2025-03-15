@@ -26,7 +26,7 @@ public class MovieController {
 
    @PostMapping("/addMovie")
 public ResponseEntity<MovieModel> addMovie(
-        @RequestParam UUID bookingId, // Add bookingId as a parameter
+        @RequestParam UUID bookingId, 
         @RequestParam String title,
         @RequestParam CategoryUnit category,
         @RequestParam String duration,
@@ -37,20 +37,15 @@ public ResponseEntity<MovieModel> addMovie(
 
     if (bookingOptional.isPresent()) {
         BookingModel booking = bookingOptional.get();
-
         // Create the new movie
         MovieModel newMovie = movieServices.addMovie(bookingId, title, category, duration, language);
 
         // Associate the movie with the booking
-        // Assuming BookingModel has a method to add a movie, e.g., booking.addMovie(newMovie);
         booking.addMovie(newMovie);
-
-        // Save the updated booking (if necessary, depending on your entity mappings)
+        // Save the updated booking
         bookingRepository.save(booking);
-
         return new ResponseEntity<>(newMovie, HttpStatus.CREATED);
     } else {
-        // Handle case where booking is not found
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
@@ -61,8 +56,7 @@ public ResponseEntity<MovieModel> addMovie(
         return new ResponseEntity<>(movies, HttpStatus.OK);
     }
 
-    // Endpoint to retrieve a movie by its ID
-    @GetMapping("/{id}")
+    @GetMapping("/getMovieById{id}")
     public ResponseEntity<MovieModel> getMovieById(@PathVariable UUID id) {
         MovieModel movie = movieServices.getMovieById(id);
         if (movie != null) {

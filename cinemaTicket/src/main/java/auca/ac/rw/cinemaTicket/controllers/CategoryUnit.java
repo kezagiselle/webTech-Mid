@@ -1,22 +1,16 @@
 package auca.ac.rw.cinemaTicket.controllers;
 
 
-// import java.util.List;
-// import java.util.Optional;
-// import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-// import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-// import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-// import auca.ac.rw.cinemaTicket.repositories.CategoryUnitRepository;
+
 import auca.ac.rw.cinemaTicket.services.CategoryUnitService;
 
 @RestController
@@ -29,7 +23,6 @@ public class CategoryUnit {
   
  @PostMapping(value = "/addParentCategory", consumes = "application/json")
     public ResponseEntity<?> saveParent(@RequestBody auca.ac.rw.cinemaTicket.models.CategoryUnit unit) {
-        // Null check for the input unit
         if (unit == null) {
             return new ResponseEntity<>("Invalid input: Parent category data is null.", HttpStatus.BAD_REQUEST);
         }

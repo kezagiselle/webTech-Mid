@@ -77,7 +77,7 @@ public class BookingController {
             // Save the booking
           BookingModel savedBooking = bookingRepository.save(booking);
     
-            // Link the seat to the booking (bidirectional relationship)
+            // Link the seat to the booking
             seat.setBooking(savedBooking);  // Set the booking reference in the seat
     
             // Save the seat with the updated booking reference
@@ -89,9 +89,6 @@ public class BookingController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
-
-
-
     
     @GetMapping(value = "/getBookings")
     public ResponseEntity<?> getUsersByShowTime(String showTime) {
@@ -107,8 +104,6 @@ public class BookingController {
         try {
             // Convert the String ID to UUID
             UUID uuid = UUID.fromString(id);
-    
-            // Call the service method to get the booking by ID
             Optional<BookingModel> booking = bookingRepository.findById(uuid);
     
             // Check if the booking exists
@@ -129,27 +124,5 @@ public class BookingController {
         List<BookingModel> bookings = bookingServices.getAllBookings();
         return ResponseEntity.ok(bookings);
     }
-    // @GetMapping(value = "/usersWhoBookedActionMovies")
-    // public ResponseEntity<?> getUsersWhoBookedActionMovies() {
-    //     List<BookingModel> bookings = bookingServices.getUsersWhoBookedActionMovies();
-    //     if (!bookings.isEmpty()) {
-    //         return new ResponseEntity<>(bookings, HttpStatus.OK);
-    //     } else {
-    //         return new ResponseEntity<>("No users found who booked action movies", HttpStatus.NOT_FOUND);
-    //     }
-    // }
-
-    @PostMapping(value = "/bookMovie")
-    public ResponseEntity<?> bookMovie(
-            @RequestParam UUID userId,
-            @RequestParam UUID movieId) {
-    
-        String result = bookingServices.bookMovie(userId, movieId);
-        if (result.equals("Booking successful")) {
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
-        }
-}
 }
 

@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -27,4 +28,11 @@ public class PaymentController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+   
+       // Get all payments
+       @GetMapping("/getAllPayments")
+       public ResponseEntity<List<PaymentModel>> getAllPayments() {
+           List<PaymentModel> payments = paymentService.getAllPayments();
+           return new ResponseEntity<>(payments, HttpStatus.OK);
+       }
 }
