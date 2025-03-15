@@ -1,12 +1,14 @@
 package auca.ac.rw.cinemaTicket.controllers;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -100,13 +102,33 @@ public class BookingController {
             return new ResponseEntity<>("User booking not found", HttpStatus.NOT_FOUND);
         }
     }
+    @GetMapping(value = "/getBookingById/{id}")
+    public ResponseEntity<?> getBookingById(@PathVariable String id) {
+        try {
+            // Convert the String ID to UUID
+            UUID uuid = UUID.fromString(id);
+    
+            // Call the service method to get the booking by ID
+            Optional<BookingModel> booking = bookingRepository.findById(uuid);
+    
+            // Check if the booking exists
+            if (booking.isPresent()) {
+                return new ResponseEntity<>(booking.get(), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Booking not found", HttpStatus.NOT_FOUND);
+            }
+        } catch (IllegalArgumentException e) {
+            // Handle invalid UUID format
+            return new ResponseEntity<>("Invalid booking ID format", HttpStatus.BAD_REQUEST);
+        }
+    }
 
-    // @GetMapping(value = "/allBookings")
-    // public ResponseEntity<List<BookingModel>> getAllBookings() {
-    //     System.out.println("Fetching all bookings...");
-    //     List<BookingModel> bookings = bookingServices.getAllBookings();
-    //     return ResponseEntity.ok(bookings);
-    // }
+    @GetMapping(value = "/allBookings")
+    public ResponseEntity<List<BookingModel>> getAllBookings() {
+        System.out.println("Fetching all bookings...");
+        List<BookingModel> bookings = bookingServices.getAllBookings();
+        return ResponseEntity.ok(bookings);
+    }
     // @GetMapping(value = "/usersWhoBookedActionMovies")
     // public ResponseEntity<?> getUsersWhoBookedActionMovies() {
     //     List<BookingModel> bookings = bookingServices.getUsersWhoBookedActionMovies();

@@ -66,6 +66,10 @@ public class BookingServices {
         }
     }
 
+    public BookingModel getBookingById(UUID id) {
+        // Assuming you have a repository or data access layer to fetch the booking
+        return bookingRepository.findById(id).orElse(null);
+    }
     
 
     //for getting all the bookings by show time
@@ -78,9 +82,9 @@ public class BookingServices {
         return bookingRepository.findAll(); 
     }
 
-    public List<BookingModel> getUsersWhoBookedActionMovies() {
-        return bookingRepository.findByMoviesCategoryName("ACTION");
-    }
+    // public List<BookingModel> getUsersWhoBookedActionMovies() {
+    //     return bookingRepository.findByMoviesCategoryName("ACTION");
+    // }
 
     public String bookMovie(UUID userId, UUID movieId) {
         // Fetch the user by ID

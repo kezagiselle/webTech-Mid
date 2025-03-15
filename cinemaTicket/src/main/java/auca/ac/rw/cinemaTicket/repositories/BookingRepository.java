@@ -1,6 +1,7 @@
 package auca.ac.rw.cinemaTicket.repositories;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,6 +22,8 @@ public interface BookingRepository extends JpaRepository<BookingModel, UUID> {
     List<BookingModel> findByUserId(UUID userId);
 
     // Find bookings by category name (if still needed)
-    @Query("SELECT DISTINCT b FROM BookingModel b JOIN b.movies m JOIN m.category c WHERE c.name = :categoryName")
-    List<BookingModel> findByMoviesCategoryName(@Param("categoryName") String categoryName);
+    // @Query("SELECT DISTINCT b FROM BookingModel b JOIN b.movies m JOIN m.category c WHERE c.name = :categoryName")
+    // List<BookingModel> findByMoviesCategoryName(@Param("categoryName") String categoryName);
+
+    Optional<BookingModel> findById(UUID id);
 }
