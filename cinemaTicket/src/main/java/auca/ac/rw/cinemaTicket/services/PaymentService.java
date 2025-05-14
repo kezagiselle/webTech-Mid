@@ -18,21 +18,15 @@ public class PaymentService {
 
     @Autowired
     private PaymentRepository paymentRepository;
-
     public PaymentModel addPaymentToBooking(UUID bookingId, PaymentModel payment) {
-        // Find the booking by bookingId
-        BookingModel booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new RuntimeException("Booking not found with ID: " + bookingId));
-
-        // Associate the payment with the booking
-        booking.setPayment(payment);
-
-        // Save the booking (cascade will save the payment as well)
-        bookingRepository.save(booking);
-
-        return payment;
+        if (bookingId != null) {
+            BookingModel booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+            payment.setBooking(booking);
+        }
+    
+        return paymentRepository.save(payment);
     }
-
         // Get payment by ID
         public PaymentModel getPaymentById(UUID paymentId) {
             return paymentRepository.findById(paymentId)

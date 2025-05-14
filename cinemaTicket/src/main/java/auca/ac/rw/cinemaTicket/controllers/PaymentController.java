@@ -17,9 +17,9 @@ public class PaymentController {
     @Autowired
     private PaymentService paymentService;
 
-    @PostMapping("/addPayment/{bookingId}")
+    @PostMapping("/addPayment")
     public ResponseEntity<PaymentModel> addPaymentToBooking(
-            @PathVariable UUID bookingId,
+            @RequestParam(value = "bookingId", required = false) UUID bookingId,
             @RequestBody PaymentModel payment) {
         try {
             PaymentModel savedPayment = paymentService.addPaymentToBooking(bookingId, payment);
@@ -28,6 +28,7 @@ public class PaymentController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    
    
        // Get all payments
        @GetMapping("/getAllPayments")
