@@ -16,19 +16,18 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-
 @Entity
 @Table(name = "users")
 public class UserModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO) 
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     @Column(name = "names")
     private String names;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "phoneNumber")
@@ -38,11 +37,9 @@ public class UserModel {
     private String role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonBackReference 
-    @JsonIgnore
+    @JsonBackReference
     private List<BookingModel> bookings;
 
-    
     public UserModel() {
     }
 
@@ -54,7 +51,6 @@ public class UserModel {
         this.role = role;
         this.bookings = bookings;
     }
-
     // Getters and setters
     public UUID getId() {
         return id;
