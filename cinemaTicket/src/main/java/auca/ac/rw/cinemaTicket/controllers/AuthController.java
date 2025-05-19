@@ -44,4 +44,13 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired OTP");
         }
     }
+    @PostMapping("/signup")
+    public ResponseEntity<?> signup(@RequestBody UserModel user) {
+        try {
+            userServices.signUpUser(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully. OTP sent to email.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error during registration: " + e.getMessage());
+        }
+    }
 }
