@@ -3,10 +3,13 @@ package auca.ac.rw.cinemaTicket.services;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
+
 
 // import org.apache.el.stream.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import auca.ac.rw.cinemaTicket.models.UserModel;
@@ -17,6 +20,12 @@ public class UserServices {
    
     @Autowired
      public UserRepository userRepository;
+
+     @Autowired
+    private PasswordEncoder passwordEncoder;
+    
+     @Autowired
+    private EmailService emailService;
 
      public String saveUser(UserModel user) {
         Optional<UserModel> checkUser = userRepository.findByNames(
@@ -84,4 +93,31 @@ public class UserServices {
 
         return false;
     }
+
+    public UserModel signUpUser(UserModel user) {
+        // Check if user already exists by email
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new RuntimeException("User with this email already exists");
+        }
+
+        // Generate 6-digit OTP
+        String otp = String.format("%06d", new Random().nextInt(999999));
+
+        // Set OTP and expiration (10 minutes from now)
+        user.setOtp(Integer.parseInt(otp));
+        user.setOtpExpires(LocalDateTime.now().plusMinutes(10));
+        user.setVerified(false);
+
+        // Encode the password before saving
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        // Save user
+        UserModel savedUser = userRepository.save(user);
+
+        // Send OTP via email
+        emailService.sendOtpEmail(savedUser.getEmail(), otp);
+
+        return savedUser;
+    }
 }
+
