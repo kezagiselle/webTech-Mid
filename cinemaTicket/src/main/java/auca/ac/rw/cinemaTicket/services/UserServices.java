@@ -1,5 +1,6 @@
 package auca.ac.rw.cinemaTicket.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -59,5 +60,28 @@ public class UserServices {
         } else {
             return "User not found";
         }
+    }
+
+     public boolean verifyOtp(String email, Integer otp) {
+        Optional<UserModel> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isEmpty()) return false;
+
+        UserModel user = optionalUser.get();
+
+        // Check OTP matches and not expired
+        if (user.getOtp() != null &&
+            user.getOtp().equals(otp) &&
+            user.getOtpExpires() != null &&
+            user.getOtpExpires().isAfter(LocalDateTime.now())) {
+
+            user.setVerified(true);
+            user.setOtp(null);
+            user.setOtpExpires(null);
+
+            userRepository.save(user);
+            return true;
+        }
+
+        return false;
     }
 }
