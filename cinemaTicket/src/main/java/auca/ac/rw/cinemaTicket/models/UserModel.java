@@ -1,21 +1,12 @@
 package auca.ac.rw.cinemaTicket.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-// import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 @Entity
 @Table(name = "users")
 public class UserModel {
@@ -24,34 +15,55 @@ public class UserModel {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(name = "names")
+    @Column(name = "names", nullable = false)
     private String names;
 
-    @Column(name = "email", unique = true)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
     @Column(name = "phoneNumber")
     private String phoneNumber;
 
-    @Column(name = "role")
+    @Column(name = "role", nullable = false)
     private String role;
 
+    
+    @Column(name = "password",  nullable = false)
+    private String password;
+
+    @Column(name = "otp", nullable = false)
+    private Integer otp;
+
+    private LocalDateTime otpExpires;
+
+    @Column(name ="verified", nullable = false)
+    private Boolean verified = false;
+
+    
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonBackReference
     private List<BookingModel> bookings;
 
-    public UserModel() {
-    }
+    
 
-    public UserModel(UUID id, String names, String email, String phoneNumber, String role, List<BookingModel> bookings) {
+    public UserModel() {}
+
+    public UserModel(UUID id, String names, String email, String phoneNumber, String role, String password,
+                     Integer otp, LocalDateTime otpExpires, Boolean verified, List<BookingModel> bookings) {
         this.id = id;
         this.names = names;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.role = role;
+        this.password = password;
+        this.otp = otp;
+        this.otpExpires = otpExpires;
+        this.verified = verified;
         this.bookings = bookings;
     }
-    // Getters and setters
+
+    // ✅ Getters and Setters
+
     public UUID getId() {
         return id;
     }
@@ -90,6 +102,38 @@ public class UserModel {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Integer getOtp() {
+        return otp;
+    }
+
+    public void setOtp(Integer otp) {
+        this.otp = otp;
+    }
+
+    public LocalDateTime getOtpExpires() {
+        return otpExpires;
+    }
+
+    public void setOtpExpires(LocalDateTime otpExpires) {
+        this.otpExpires = otpExpires;
+    }
+
+    public Boolean getVerified() {
+        return verified;
+    }
+
+    public void setVerified(Boolean verified) {
+        this.verified = verified;
     }
 
     public List<BookingModel> getBookings() {
