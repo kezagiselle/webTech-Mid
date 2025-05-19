@@ -26,8 +26,7 @@ public class UserModel {
 
     @Column(name = "role", nullable = false)
     private String role;
-
-    
+  
     @Column(name = "password",  nullable = false)
     private String password;
 
