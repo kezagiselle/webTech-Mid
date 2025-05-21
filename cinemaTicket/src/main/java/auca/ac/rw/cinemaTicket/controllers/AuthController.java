@@ -34,50 +34,55 @@ public class AuthController {
     @Autowired
     private UserServices userServices;
 
-   @PostMapping("/login")
-public ResponseEntity<?> login(@Validated @RequestBody LoginRequest request) {
-    try {
-        // 1. Authenticate
-        Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
-                request.getEmail(), 
-                request.getPassword()
-            )
-        );
-        
-        // 2. Set authentication in context
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        
-        // 3. Get user details
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        
-        // 4. Generate response
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", "success");
-        response.put("message", "Login successful");
-        response.put("username", userDetails.getUsername());
-        response.put("authorities", userDetails.getAuthorities());
-        
-        // If using JWT (recommended):
-        // String jwtToken = tokenProvider.generateToken(authentication);
-        // response.put("token", jwtToken);
-        
-        return ResponseEntity.ok(response);
-        
-    } catch (BadCredentialsException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(Map.of("status", "error", "message", "Invalid email or password"));
-            
-    } catch (DisabledException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(Map.of("status", "error", "message", "Account disabled"));
-            
-    } catch (LockedException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(Map.of("status", "error", "message", "Account locked"));
-            
+   
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@Validated @RequestBody LoginRequest request) {
+        try {
+            // 1. Authenticate
+            Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                    request.getEmail(),
+                    request.getPassword()
+                )
+            );
+
+            // 2. Set authentication in context
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            // 3. Extract user details
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+            // 4. Prepare response
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", "success");
+            response.put("message", "Login successful");
+            response.put("username", userDetails.getUsername());
+            response.put("authorities", userDetails.getAuthorities());
+
+            // Optional: Add JWT token here if implemented
+            // String jwtToken = tokenProvider.generateToken(authentication);
+            // response.put("token", jwtToken);
+
+            return ResponseEntity.ok(response);
+
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("status", "error", "message", "Invalid email or password"));
+
+        } catch (DisabledException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("status", "error", "message", "Account disabled"));
+
+        } catch (LockedException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("status", "error", "message", "Account locked"));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("status", "error", "message", "Authentication failed"));
+        }
     }
-}
+
     @PostMapping("/verify-otp")
     public ResponseEntity<?> verifyOtp(@RequestBody OtpRequest request) {
         boolean verified = userServices.verifyOtp(request.getEmail(), request.getOtp());

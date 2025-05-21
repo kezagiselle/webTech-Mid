@@ -1,17 +1,14 @@
 package auca.ac.rw.cinemaTicket.DTO;
 
 public class LoginRequest {
+   @NotBlank
+    @Email
     private String email;
+
+    @NotBlank
     private String password;
 
-    // Constructors (optional)
-    public LoginRequest() {}
-    public LoginRequest(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
-
-    // Getters and Setters
+    // Getters and setters
     public String getEmail() {
         return email;
     }
