@@ -6,12 +6,19 @@ import auca.ac.rw.cinemaTicket.models.UserModel;
 import auca.ac.rw.cinemaTicket.repositories.UserRepository;
 import auca.ac.rw.cinemaTicket.services.UserServices;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.naming.AuthenticationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,14 +34,50 @@ public class AuthController {
     @Autowired
     private UserServices userServices;
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        Authentication auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+   @PostMapping("/login")
+public ResponseEntity<?> login(@Validated @RequestBody LoginRequest request) {
+    try {
+        // 1. Authenticate
+        Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(
+                request.getEmail(), 
+                request.getPassword()
+            )
         );
-        SecurityContextHolder.getContext().setAuthentication(auth);
-        return ResponseEntity.ok("Login successful");
+        
+        // 2. Set authentication in context
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        
+        // 3. Get user details
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        
+        // 4. Generate response
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("message", "Login successful");
+        response.put("username", userDetails.getUsername());
+        response.put("authorities", userDetails.getAuthorities());
+        
+        // If using JWT (recommended):
+        // String jwtToken = tokenProvider.generateToken(authentication);
+        // response.put("token", jwtToken);
+        
+        return ResponseEntity.ok(response);
+        
+    } catch (BadCredentialsException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body(Map.of("status", "error", "message", "Invalid email or password"));
+            
+    } catch (DisabledException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body(Map.of("status", "error", "message", "Account disabled"));
+            
+    } catch (LockedException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body(Map.of("status", "error", "message", "Account locked"));
+            
     }
+}
     @PostMapping("/verify-otp")
     public ResponseEntity<?> verifyOtp(@RequestBody OtpRequest request) {
         boolean verified = userServices.verifyOtp(request.getEmail(), request.getOtp());

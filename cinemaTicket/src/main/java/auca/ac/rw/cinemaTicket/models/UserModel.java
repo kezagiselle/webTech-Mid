@@ -142,4 +142,19 @@ public class UserModel {
     public void setBookings(List<BookingModel> bookings) {
         this.bookings = bookings;
     }
+
+    public boolean isEnabled() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'isEnabled'");
+    }
+
+    public boolean isLocked() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'isLocked'");
+    }
+
+    public boolean isActive() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'isActive'");
+    }
 }
