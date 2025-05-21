@@ -3,6 +3,7 @@ package auca.ac.rw.cinemaTicket.controllers;
 import auca.ac.rw.cinemaTicket.DTO.AuthRequest;
 import auca.ac.rw.cinemaTicket.DTO.LoginRequest;
 import auca.ac.rw.cinemaTicket.DTO.OtpRequest;
+import auca.ac.rw.cinemaTicket.Security.JwtUtil;
 import auca.ac.rw.cinemaTicket.models.UserModel;
 import auca.ac.rw.cinemaTicket.repositories.UserRepository;
 import auca.ac.rw.cinemaTicket.services.UserServices;
@@ -35,14 +36,26 @@ public class AuthController {
     @Autowired
     private UserServices userServices;
 
-       @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthRequest request) throws AuthenticationException {
-        authenticationManager.authenticate(
-   new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-);
-        // If success: generate JWT token here
-        return ResponseEntity.ok("Login successful");
+    @Autowired
+    private JwtUtil jwtUtil ;
+
+   @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody AuthRequest request) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            );
+
+            String email = authentication.getName();
+            String token = jwtUtil.generateToken(email);
+
+            // You can return a proper response object instead of just the token string
+            return (ResponseEntity<?>) ResponseEntity.ok();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Invalid email or password");
+        }
     }
+}
 
     @PostMapping("/verify-otp")
     public ResponseEntity<?> verifyOtp(@RequestBody OtpRequest request) {
