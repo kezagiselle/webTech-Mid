@@ -1,5 +1,6 @@
 package auca.ac.rw.cinemaTicket.controllers;
 
+import auca.ac.rw.cinemaTicket.DTO.AuthRequest;
 import auca.ac.rw.cinemaTicket.DTO.LoginRequest;
 import auca.ac.rw.cinemaTicket.DTO.OtpRequest;
 import auca.ac.rw.cinemaTicket.models.UserModel;
@@ -34,53 +35,13 @@ public class AuthController {
     @Autowired
     private UserServices userServices;
 
-   
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@Validated @RequestBody LoginRequest request) {
-        try {
-            // 1. Authenticate
-            Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                    request.getEmail(),
-                    request.getPassword()
-                )
-            );
-
-            // 2. Set authentication in context
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            // 3. Extract user details
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
-            // 4. Prepare response
-            Map<String, Object> response = new HashMap<>();
-            response.put("status", "success");
-            response.put("message", "Login successful");
-            response.put("username", userDetails.getUsername());
-            response.put("authorities", userDetails.getAuthorities());
-
-            // Optional: Add JWT token here if implemented
-            // String jwtToken = tokenProvider.generateToken(authentication);
-            // response.put("token", jwtToken);
-
-            return ResponseEntity.ok(response);
-
-        } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("status", "error", "message", "Invalid email or password"));
-
-        } catch (DisabledException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("status", "error", "message", "Account disabled"));
-
-        } catch (LockedException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("status", "error", "message", "Account locked"));
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("status", "error", "message", "Authentication failed"));
-        }
+       @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody AuthRequest request) throws AuthenticationException {
+        authenticationManager.authenticate(
+   new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+);
+        // If success: generate JWT token here
+        return ResponseEntity.ok("Login successful");
     }
 
     @PostMapping("/verify-otp")
