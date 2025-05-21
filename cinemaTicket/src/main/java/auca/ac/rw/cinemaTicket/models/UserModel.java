@@ -30,7 +30,7 @@ public class UserModel {
     @Column(name = "password",  nullable = false)
     private String password;
 
-    @Column(name = "otp", nullable = false)
+    @Column(name = "otp")
     private Integer otp;
 
     private LocalDateTime otpExpires;

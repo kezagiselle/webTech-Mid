@@ -26,10 +26,10 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder(); 
     }
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
-    }
+  @Bean
+public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+    return config.getAuthenticationManager();
+}
       // ✅ Add this method to define public and secured endpoints
    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -51,4 +51,5 @@ public class SecurityConfig {
 
         return http.build();
     }
+    
 }
