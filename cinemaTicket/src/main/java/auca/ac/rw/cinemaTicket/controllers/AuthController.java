@@ -39,22 +39,31 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil ;
 
-   @PostMapping("/login")
+
+    public AuthController(AuthenticationManager authenticationManager, 
+                         JwtUtil jwtUtil) {
+        this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
+    }
+
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequest request) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
             );
-
-            String email = authentication.getName();
-            String token = jwtUtil.generateToken(email);
-
-            // You can return a proper response object instead of just the token string
-            return (ResponseEntity<?>) ResponseEntity.ok();
+            
+            String token = jwtUtil.generateToken(request.getEmail());
+            return ResponseEntity.ok().body(new AuthResponse(token, "Bearer"));
+            
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Invalid email or password");
         }
     }
+
+    // Inner class for response
+    private record AuthResponse(String token, String type) {}
+
 
 
     @PostMapping("/verify-otp")
