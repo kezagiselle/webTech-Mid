@@ -1,5 +1,8 @@
 package auca.ac.rw.cinemaTicket.DTO;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 public class AuthRequest {
     
     @NotBlank(message = "Email is required")
