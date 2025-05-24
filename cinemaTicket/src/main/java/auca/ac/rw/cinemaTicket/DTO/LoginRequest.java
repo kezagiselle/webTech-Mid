@@ -3,7 +3,7 @@ package auca.ac.rw.cinemaTicket.DTO;
 public class LoginRequest {
    
     private String email;
-    private String password;
+    private String otp;
 
     // Getters and setters
     public String getEmail() {
@@ -14,11 +14,11 @@ public class LoginRequest {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getOtp() {
+        return otp;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setOtp(String otp) {
+        this.otp = otp;
     }
 }

@@ -1,7 +1,7 @@
 package auca.ac.rw.cinemaTicket.DTO;
 
 public class OtpRequest {
-     private String email;
+    private String email;
     private Integer otp;
 
     public OtpRequest() {
@@ -28,4 +28,3 @@ public class OtpRequest {
         this.otp = otp;
     }
 }
-

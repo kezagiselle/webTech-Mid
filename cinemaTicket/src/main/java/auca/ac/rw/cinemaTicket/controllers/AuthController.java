@@ -1,7 +1,9 @@
 package auca.ac.rw.cinemaTicket.controllers;
 
-// import auca.ac.rw.cinemaTicket.DTO.LoginRequest;
 import auca.ac.rw.cinemaTicket.DTO.OtpRequest;
+import auca.ac.rw.cinemaTicket.DTO.OtpRequest;
+
+// import auca.ac.rw.cinemaTicket.DTO.LoginRequest;
 import auca.ac.rw.cinemaTicket.Security.JwtUtil;
 import auca.ac.rw.cinemaTicket.models.UserModel;
 import auca.ac.rw.cinemaTicket.repositories.UserRepository;
@@ -58,9 +60,9 @@ public ResponseEntity<?> login(@RequestBody OtpRequest request) {
         UserModel user = userOptional.get();
 
         // 2. Check if OTP matches
-        if (!user.getOtp().equals(request.getOtp())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or OTP");
-        }
+       if (user.getOtp() == null || !user.getOtp().equals(request.getOtp())) {
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or OTP");
+}
 
         // 3. Generate JWT token
         String token = jwtUtil.generateToken(user.getEmail());
@@ -68,9 +70,10 @@ public ResponseEntity<?> login(@RequestBody OtpRequest request) {
         // 4. Return AuthResponse (make sure AuthResponse has public modifier)
         return ResponseEntity.ok(new AuthResponse(token, "Bearer"));
 
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
-    }
+   } catch (Exception e) {
+    e.printStackTrace(); // Add this line to see the real error in logs
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
+}
 }
 
 
