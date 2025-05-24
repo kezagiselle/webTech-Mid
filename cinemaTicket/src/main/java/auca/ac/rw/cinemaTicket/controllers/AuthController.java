@@ -154,3 +154,4 @@ public ResponseEntity<?> resetPassword(@RequestBody PasswordResetRequest request
 
     return ResponseEntity.ok("Password reset successful.");
 }
+}

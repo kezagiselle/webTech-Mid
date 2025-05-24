@@ -126,5 +126,26 @@ public String encodePassword(String rawPassword) {
     return passwordEncoder.encode(rawPassword);
 }
 
-}
+   // Example OTP sending method
+    public void sendOtpToEmail(String email) throws Exception {
+        // 1. Find the user
+        Optional<UserModel> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isEmpty()) {
+            throw new Exception("User not found");
+        }
+        UserModel user = userOpt.get();
 
+        // 2. Generate OTP (6-digit integer)
+        int otp = 100000 + new Random().nextInt(900000); // 100000 to 999999
+
+        // 3. Set OTP and expiration (e.g., 10 minutes)
+        user.setOtp(otp);  // Assuming user.setOtp accepts Integer
+        user.setOtpExpires(LocalDateTime.now().plusMinutes(10));
+
+        // 4. Save user with OTP
+        userRepository.save(user);
+
+        // 5. Send OTP via email (for now just print)
+        System.out.println("Sending OTP to " + email + ": " + otp);
+    }
+}
