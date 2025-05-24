@@ -32,7 +32,8 @@ public class UserModel {
 
     @Column(name = "otp")
     private Integer otp;
-
+ 
+     @Column(name = "otp_expires")
     private LocalDateTime otpExpires;
 
     @Column(name ="verified", nullable = false)
