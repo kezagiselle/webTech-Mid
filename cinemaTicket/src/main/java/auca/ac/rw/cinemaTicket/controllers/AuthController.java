@@ -27,6 +27,7 @@ import org.springframework.security.authentication.*;
 // import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/auth")
 public class AuthController {

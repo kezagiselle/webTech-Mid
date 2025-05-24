@@ -102,7 +102,7 @@ public class UserServices {
 
     // Set OTP and expiration (10 minutes from now)
     user.setOtp(Integer.parseInt(otp));
-    user.setOtpExpires(LocalDateTime.now().plusMinutes(10));
+    user.setOtpExpires(LocalDateTime.now().plusMinutes(20));
     user.setVerified(false);
 
     // Encode the password before saving
