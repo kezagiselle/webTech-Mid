@@ -30,7 +30,7 @@ public class UserModel {
     @Column(name = "password",  nullable = false)
     private String password;
 
-    @Column(name = "otp")
+    @Column(name = "otp", nullable = true)
     private Integer otp;
  
      @Column(name = "otp_expires")

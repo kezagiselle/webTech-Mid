@@ -51,7 +51,6 @@ public class AuthController {
 @PostMapping("/login")
 public ResponseEntity<?> login(@RequestBody OtpRequest request) {
     try {
-        // 1. Find user by email
         Optional<UserModel> userOptional = userRepository.findByEmail(request.getEmail());
         if (userOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or OTP");
@@ -59,27 +58,30 @@ public ResponseEntity<?> login(@RequestBody OtpRequest request) {
 
         UserModel user = userOptional.get();
 
-        // 2. Check if OTP matches
-       if (user.getOtp() == null || !user.getOtp().equals(request.getOtp())) {
-    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or OTP");
-}
+        // Debugging output
+        System.out.println("Received OTP: " + request.getOtp());
+        System.out.println("Stored OTP: " + user.getOtp());
 
-        // 3. Generate JWT token
+        if (user.getOtp() == null || !user.getOtp().equals(request.getOtp())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or OTP");
+        }
+
+        // Optional: clear OTP after login
+        user.setOtp(null);
+        user.setOtpExpires(null);
+        userRepository.save(user);
+
         String token = jwtUtil.generateToken(user.getEmail());
-
-        // 4. Return AuthResponse (make sure AuthResponse has public modifier)
         return ResponseEntity.ok(new AuthResponse(token, "Bearer"));
 
-   } catch (Exception e) {
-    e.printStackTrace(); // Add this line to see the real error in logs
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
+    } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
+    }
 }
-}
 
+public record AuthResponse(String token, String type) {}
 
-
-    // Inner class for response
-    private record AuthResponse(String token, String type) {}
 
 
 
