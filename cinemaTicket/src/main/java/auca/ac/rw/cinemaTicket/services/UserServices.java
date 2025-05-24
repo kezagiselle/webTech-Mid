@@ -71,28 +71,25 @@ public class UserServices {
         }
     }
 
-     public boolean verifyOtp(String email, Integer otp) {
-        Optional<UserModel> optionalUser = userRepository.findByEmail(email);
-        if (optionalUser.isEmpty()) return false;
-
-        UserModel user = optionalUser.get();
-
-        // Check OTP matches and not expired
-        if (user.getOtp() != null &&
-            user.getOtp().equals(otp) &&
-            user.getOtpExpires() != null &&
-            user.getOtpExpires().isAfter(LocalDateTime.now())) {
-
-            user.setVerified(true);
-            user.setOtp(null);
-            user.setOtpExpires(null);
-
-            userRepository.save(user);
-            return true;
-        }
-
+    public boolean verifyOtp(String email, Integer otp) {
+    Optional<UserModel> userOptional = userRepository.findByEmail(email);
+    if (userOptional.isEmpty()) {
         return false;
     }
+
+    UserModel user = userOptional.get();
+    
+    // Check OTP match and expiry
+    if (user.getOtp() == null || !user.getOtp().equals(otp)) {
+        return false;
+    }
+    if (user.getOtpExpires().isBefore(LocalDateTime.now())) {
+        return false;
+    }
+
+    // **Don’t clear OTP yet** (keep it for login)
+    return true;
+}
 
     public UserModel signUpUser(UserModel user) {
     // Check if user already exists by email

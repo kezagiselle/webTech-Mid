@@ -9,6 +9,7 @@ import auca.ac.rw.cinemaTicket.models.UserModel;
 import auca.ac.rw.cinemaTicket.repositories.UserRepository;
 import auca.ac.rw.cinemaTicket.services.UserServices;
 
+import java.time.LocalDateTime;
 // import java.util.HashMap;
 // import java.util.Map;
 import java.util.Optional;
@@ -51,6 +52,7 @@ public class AuthController {
 @PostMapping("/login")
 public ResponseEntity<?> login(@RequestBody OtpRequest request) {
     try {
+        // 1. Find user by email
         Optional<UserModel> userOptional = userRepository.findByEmail(request.getEmail());
         if (userOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or OTP");
@@ -58,32 +60,39 @@ public ResponseEntity<?> login(@RequestBody OtpRequest request) {
 
         UserModel user = userOptional.get();
 
-        // Debugging output
-        System.out.println("Received OTP: " + request.getOtp());
-        System.out.println("Stored OTP: " + user.getOtp());
+        // Debug: Print OTP and expiry
+        System.out.println("[DEBUG] Received OTP: " + request.getOtp());
+        System.out.println("[DEBUG] Stored OTP: " + user.getOtp() + ", Expires: " + user.getOtpExpires());
+        System.out.println("[DEBUG] Current Time: " + LocalDateTime.now());
 
-        if (user.getOtp() == null || !user.getOtp().equals(request.getOtp())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or OTP");
+        // 2. Check OTP expiry first
+        if (user.getOtpExpires() != null && user.getOtpExpires().isBefore(LocalDateTime.now())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("OTP has expired");
         }
 
-        // Optional: clear OTP after login
+        // 3. Compare OTPs (handle type mismatch)
+        if (user.getOtp() == null || !user.getOtp().toString().equals(request.getOtp().toString())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid OTP");
+        }
+
+        // 4. Generate JWT token
+        String token = jwtUtil.generateToken(user.getEmail());
+
+        // 5. (Optional) Clear OTP after successful login
         user.setOtp(null);
         user.setOtpExpires(null);
         userRepository.save(user);
 
-        String token = jwtUtil.generateToken(user.getEmail());
         return ResponseEntity.ok(new AuthResponse(token, "Bearer"));
 
     } catch (Exception e) {
         e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Login failed: " + e.getMessage());
     }
 }
 
+// Static response class
 public record AuthResponse(String token, String type) {}
-
-
-
 
     @PostMapping("/verify-otp")
     public ResponseEntity<?> verifyOtp(@RequestBody OtpRequest request) {
