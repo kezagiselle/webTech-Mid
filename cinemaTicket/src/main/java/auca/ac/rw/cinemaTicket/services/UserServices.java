@@ -122,6 +122,9 @@ public class UserServices {
     return savedUser;
 }
 
+public String encodePassword(String rawPassword) {
+    return passwordEncoder.encode(rawPassword);
+}
 
 }
 

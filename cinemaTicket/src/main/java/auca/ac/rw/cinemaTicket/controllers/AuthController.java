@@ -1,6 +1,8 @@
 package auca.ac.rw.cinemaTicket.controllers;
 
+import auca.ac.rw.cinemaTicket.DTO.EmailRequest;
 import auca.ac.rw.cinemaTicket.DTO.OtpRequest;
+import auca.ac.rw.cinemaTicket.DTO.PasswordResetRequest;
 import auca.ac.rw.cinemaTicket.DTO.OtpRequest;
 
 // import auca.ac.rw.cinemaTicket.DTO.LoginRequest;
@@ -113,4 +115,42 @@ public record AuthResponse(String token, String type) {}
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error during registration: " + e.getMessage());
         }
     }
+
+    @PostMapping("/request-reset")
+public ResponseEntity<?> requestPasswordReset(@RequestBody EmailRequest request) {
+    Optional<UserModel> userOpt = userRepository.findByEmail(request.getEmail());
+
+    if (userOpt.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+    }
+
+    try {
+        userServices.sendOtpToEmail(request.getEmail()); // Reuse existing OTP logic
+        return ResponseEntity.ok("OTP sent to email for password reset.");
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error sending OTP: " + e.getMessage());
+    }
+}
+
+@PostMapping("/reset-password")
+public ResponseEntity<?> resetPassword(@RequestBody PasswordResetRequest request) {
+    Optional<UserModel> userOpt = userRepository.findByEmail(request.getEmail());
+
+    if (userOpt.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+    }
+
+    UserModel user = userOpt.get();
+
+    if (user.getOtp() == null || !user.getOtp().equals(request.getOtp()) ||
+        user.getOtpExpires() == null || user.getOtpExpires().isBefore(LocalDateTime.now())) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired OTP");
+    }
+
+    user.setPassword(userServices.encodePassword(request.getNewPassword())); // Ensure password encoding
+    user.setOtp(null);
+    user.setOtpExpires(null);
+    userRepository.save(user);
+
+    return ResponseEntity.ok("Password reset successful.");
 }
